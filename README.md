@@ -17,14 +17,13 @@ $ nodejs-nightly-builder [--type <nightly|next-nightly>] --ref <git head ref> --
   - ***"githubScheme"*** (optional, defaults to "https://github.com/"): the scheme for accessing the GitHub repository, including host and other components up to the "org/repo"
   - ***"githubAuthUser"***: the user for which the GitHub API is being accessed by
   - ***"githubAuthToken"***: the authentication token for accessing the API for the given user (e.g. obtained with https://github.com/rvagg/ghauth)
-  - ***"releaseUrlBase"*** (optional, defaults to "https://nodejs.org/download/"): the release URL base passed to `--configure` when building Node.js, this is given to Jenkins and passed down in to the builders, the `type` is appended to the end
   - ***"jenkinsToken"***: the token entered in the Jenkins job for building distributables, required to authenticate API triggered access
   - ***"jenkinsJobUrl"***: URL of the job being accessed, as you would as a normal user, e.g. "https://ci.nodejs.org/job/node-release"
   - ***"jenkinsCrumbUrl"***: the Jenkins API endpoint for obtaining a crumb for bypassing XSS checks during API access, e.g. "https://ci.nodejs.org/crumbIssuer/api/json"
 
 The GitHub API is used to check HEAD commits which is why an authentication token is required.
 
-When run, `nodejs-nightly-builder` will first check whether a build is required. It does this by checking the file at `{releaseUrlBase}{type}/index.json`, where `{releaseUrlBase}` comes from the config file and `type` is provided on the commandline, e.g. `https://nodejs.org/download/nightly/index.json`. Nightly builds contain a commit sha that can be decoded from their version string. The HEAD commit is also pulled from GitHub for the `ref` (branch) provided on the commandline. If the latest build does not match the HEAD commit, a new nightly build is required. Nightly builds are triggered with Jenkins.
+When run, `nodejs-nightly-builder` will first check whether a build is required. It does this by checking the file at `https://nodejs.org/download/{type}/index.json`, where `type` is provided on the commandline, e.g. `https://nodejs.org/download/nightly/index.json`. Nightly builds contain a commit sha that can be decoded from their version string. The HEAD commit is also pulled from GitHub for the `ref` (branch) provided on the commandline. If the latest build does not match the HEAD commit, a new nightly build is required. Nightly builds are triggered with Jenkins.
 
 -----------------------------------
 
