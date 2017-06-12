@@ -30,10 +30,6 @@ function triggerBuild(options, callback) {
                 , value : options.type
               }
             , {
-                  name  : 'release_urlbase'
-                , value : `${options.releaseUrlBase}${options.type}/`
-              }
-            , {
                   name  : 'rc'
                 , value : '0'
               }

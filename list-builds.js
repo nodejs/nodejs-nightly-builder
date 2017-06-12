@@ -2,13 +2,11 @@
 
 const jsonist = require('jsonist')
 
-const indexUrl = '{releaseUrlBase}{type}/index.json'
+const indexUrl = 'https://nodejs.org/download/{type}/index.json'
 
 
 function listBuilds (type, config, callback) {
-  let url = indexUrl
-              .replace(/\{type\}/, type)
-              .replace(/\{releaseUrlBase\}/, config.releaseUrlBase)
+  let url = indexUrl.replace(/\{type\}/, type)
 
   function onGet (err, data) {
     if (err)
@@ -18,7 +16,7 @@ function listBuilds (type, config, callback) {
       return callback(new Error(`no builds for "${type}"`))
 
     data = data.map(function (d) {
-      let m      = d.version.match(/nightly(20\d\d)(\d\d)(\d\d)([0-9a-f]{7,})/)
+      let m      = d.version.match(/(?:nightly|v8-canary)(20\d\d)(\d\d)(\d\d)([0-9a-f]{7,})/)
         , date   = new Date(m && `${m[1]}-${m[2]}-${m[3]}` || d.date)
         , commit = m && m[4]
 
@@ -41,7 +39,7 @@ function listBuilds (type, config, callback) {
 module.exports = listBuilds
 
 if (require.main == module) {
-  listBuilds('nightly', function (err, data) {
+  listBuilds(process.argv[2] || 'nightly', function (err, data) {
     if (err)
       throw err
 
