@@ -1,8 +1,9 @@
 "use strict"
 
 const test         = require('tape')
+    , after        = require('after')
     , latestCommit = require('./latest-commit')
-    , listBuilds  = require('./list-builds')
+    , listBuilds   = require('./list-builds')
     , ghauth       = require('ghauth')
     , appCfg       = require('application-config')
     , authOptions  = {
@@ -24,7 +25,6 @@ test('list-builds', function (t) {
   t.plan(7)
   let other = null
 
-
   function verify () {
     return function (err, data) {
       t.error(err, 'no error')
@@ -39,7 +39,36 @@ test('list-builds', function (t) {
     }
   }
 
-  listBuilds('nightly', verify())
+  listBuilds('nightly', {}, verify())
+})
+
+
+test('list-builds chakracore-nightly', function (t) {
+  t.plan(6)
+  let done = after(2, verify())
+    , data1
+    , data2
+
+  function verify () {
+    return function (err) {
+      t.error(err, 'no error')
+      t.ok(Array.isArray(data1), ' data1 is array')
+      t.ok(data1.length > 1, 'data1 has data')
+      t.ok(Array.isArray(data2), 'data2 is array')
+      t.ok(data2.length > 1, 'data2 has data')
+      t.notDeepEqual(data1, data2, 'different data with and without urlTypePrefix')
+    }
+  }
+
+  listBuilds('nightly', {}, function (err, data) {
+    data1 = data
+    done(err)
+  })
+
+  listBuilds('nightly', { urlTypePrefix: 'chakracore-' }, function (err, data) {
+    data2 = data
+    done(err)
+  })
 })
 
 
@@ -62,7 +91,7 @@ test('list-builds v8-canary', function (t) {
     }
   }
 
-  listBuilds('v8-canary', verify())
+  listBuilds('v8-canary', {}, verify())
 })
 
 
