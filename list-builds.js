@@ -6,7 +6,7 @@ const indexUrl = 'https://nodejs.org/download/{type}/index.json'
 
 
 function listBuilds (type, config, callback) {
-  let url = indexUrl.replace(/\{type\}/, type)
+  let url = indexUrl.replace(/\{type\}/, `${config.urlTypePrefix || ''}${type}`)
 
   function onGet (err, data) {
     if (err)
