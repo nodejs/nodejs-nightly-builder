@@ -17,6 +17,7 @@ const argv          = require('minimist')(process.argv.slice(2))
           githubOrg       : 'nodejs'
         , githubRepo      : 'node'
         , githubScheme    : 'https://github.com/'
+        , urlTypePrefix   : ''
       }
 
 if (typeof argv.type != 'string')
@@ -35,6 +36,7 @@ if (!/^(nightly|v8-canary)$/.test(argv.type)
     || typeof config.githubRepo      != 'string'
     || typeof config.githubOrg       != 'string'
     || typeof config.githubScheme    != 'string'
+    || typeof config.urlTypePrefix   != 'string'
   ) {
 
   console.error('Invalid arguments or config')
