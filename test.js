@@ -39,7 +39,7 @@ test('list-builds', function (t) {
     }
   }
 
-  listBuilds('nightly', verify())
+  listBuilds('nightly', {}, verify())
 })
 
 
@@ -62,7 +62,7 @@ test('list-builds v8-canary', function (t) {
     }
   }
 
-  listBuilds('v8-canary', verify())
+  listBuilds('v8-canary', {}, verify())
 })
 
 
