@@ -17,7 +17,6 @@ const argv          = require('minimist')(process.argv.slice(2))
           githubOrg       : 'nodejs'
         , githubRepo      : 'node'
         , githubScheme    : 'https://github.com/'
-        , releaseUrlBase  : 'https://nodejs.org/download/'
       }
 
 if (typeof argv.type != 'string')
@@ -26,7 +25,7 @@ if (typeof argv.type != 'string')
 let config = argv.config && require(argv.config)
 config = xtend(defaultConfig, config)
 
-if (!/^(nightly|next-nightly)$/.test(argv.type)
+if (!/^(nightly|v8-canary)$/.test(argv.type)
     || typeof argv.ref != 'string'
     || typeof config.jenkinsToken    != 'string'
     || typeof config.jenkinsJobUrl   != 'string'
@@ -36,11 +35,10 @@ if (!/^(nightly|next-nightly)$/.test(argv.type)
     || typeof config.githubRepo      != 'string'
     || typeof config.githubOrg       != 'string'
     || typeof config.githubScheme    != 'string'
-    || typeof config.releaseUrlBase  != 'string'
   ) {
 
   console.error('Invalid arguments or config')
-  console.error('Usage: nodejs-nightly-builder [--type <nightly|next-nightly>] --ref <git head ref> --config <config file> [--force]')
+  console.error('Usage: nodejs-nightly-builder [--type <nightly|v8-canary>] --ref <git head ref> --config <config file> [--force]')
   return process.exit(1)
 }
 
