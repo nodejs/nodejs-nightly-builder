@@ -39,9 +39,15 @@ function triggerBuild(options, callback) {
   if (!options.jenkinsCrumbUrl)
     return requestTrigger()
 
-  jsonist.get(options.jenkinsCrumbUrl, { auth: auth }, function (err, data) {
+  let cookies
+
+  const jr = jsonist.get(options.jenkinsCrumbUrl, { auth: auth }, function (err, data) {
     if (err)
       return callback(err)
+
+    cookies = jr.response.headers['set-cookie'] &&
+      jr.response.headers['set-cookie'].map((c) => c.split(';')[0])
+        .join(';')
 
     requestTrigger(data)
   })
@@ -56,12 +62,14 @@ function triggerBuild(options, callback) {
 
     postData[crumb.crumbRequestField] = crumb.crumb
     post = qs.encode(postData)
-    req = hyperquest(url, {
-        method   :  'post'
-      , headers  : { 'content-type' : 'application/x-www-form-urlencoded' }
-      , auth     : auth
-    })
 
+    const headers = { 'content-type' : 'application/x-www-form-urlencoded' }
+
+    if (cookies) {
+      headers.cookie = cookies
+    }
+
+    req = hyperquest(url, { method: 'post', auth, headers })
     req.end(post)
     req.pipe(bl(callback))
   }
