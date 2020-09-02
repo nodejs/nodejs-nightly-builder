@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "after": "~0.8.2",
-    "bl": "~1.2.1",
+    "bl": "~4.0.3",
     "ghrepos": "~2.0.0",
     "hyperquest": "~2.1.2",
     "jsonist": "~2.1.0",
