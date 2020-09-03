@@ -5,7 +5,7 @@ const test         = require('tape')
     , latestCommit = require('./latest-commit')
     , listBuilds   = require('./list-builds')
     , ghauth       = require('ghauth')
-    , appCfg       = require('application-config')
+    , AppCfg       = require('application-config')
     , authOptions  = {
           configName : 'nodejs-nightly-builder'
         , scope      : []
@@ -99,29 +99,28 @@ test('latest-commit', function (t) {
   t.plan(4)
   let other = null
 
-  appCfg(authOptions.configName).read(function (err, config) {
-    if (err) {
+  new AppCfg(authOptions.configName).read()
+    .catch((err) => {
       console.error('You need GitHub authentication credentials saved first, run `node test.js auth` to set this up')
       return process.exit(1)
-    }
-
-    function verify () {
-      return function (err, sha) {
-        t.error(err, 'no error')
-        t.equal(typeof sha, 'string', 'got sha')
-        t.equal(sha.length, 40, `sha looks good (${sha})`)
-        t.notEqual(sha, other, 'sha not the same as other type of sha')
-        other = sha // who's gonna be first??
+    }).then((config) => {
+      function verify () {
+        return function (err, sha) {
+          t.error(err, 'no error')
+          t.equal(typeof sha, 'string', 'got sha')
+          t.equal(sha.length, 40, `sha looks good (${sha})`)
+          t.notEqual(sha, other, 'sha not the same as other type of sha')
+          other = sha // who's gonna be first??
+        }
       }
-    }
 
-    latestCommit('nightly', 'heads/v5.x', {
-        githubOrg       : 'nodejs'
-      , githubRepo      : 'node'
-      , githubAuthUser  : config.user
-      , githubAuthToken : config.token
-    }, verify())
-  })
+      latestCommit('nightly', 'heads/v5.x', {
+          githubOrg       : 'nodejs'
+        , githubRepo      : 'node'
+        , githubAuthUser  : config.user
+        , githubAuthToken : config.token
+      }, verify())
+    })
 })
 
 
@@ -129,27 +128,27 @@ test('latest-commit v8-canary', function (t) {
   t.plan(4)
   let other = null
 
-  appCfg(authOptions.configName).read(function (err, config) {
-    if (err) {
+  new AppCfg(authOptions.configName).read()
+    .catch((err) => {
       console.error('You need GitHub authentication credentials saved first, run `node test.js auth` to set this up')
       return process.exit(1)
-    }
-
-    function verify () {
-      return function (err, sha) {
-        t.error(err, 'no error')
-        t.equal(typeof sha, 'string', 'got sha')
-        t.equal(sha.length, 40, `sha looks good (${sha})`)
-        t.notEqual(sha, other, 'sha not the same as other type of sha')
-        other = sha // who's gonna be first??
+    })
+    .then((config) => {
+      function verify () {
+        return function (err, sha) {
+          t.error(err, 'no error')
+          t.equal(typeof sha, 'string', 'got sha')
+          t.equal(sha.length, 40, `sha looks good (${sha})`)
+          t.notEqual(sha, other, 'sha not the same as other type of sha')
+          other = sha // who's gonna be first??
+        }
       }
-    }
 
-    latestCommit('v8-canary', 'heads/canary', {
-        githubOrg       : 'nodejs'
-      , githubRepo      : 'node-v8'
-      , githubAuthUser  : config.user
-      , githubAuthToken : config.token
-    }, verify())
-  })
+      latestCommit('v8-canary', 'heads/canary', {
+          githubOrg       : 'nodejs'
+        , githubRepo      : 'node-v8'
+        , githubAuthUser  : config.user
+        , githubAuthToken : config.token
+      }, verify())
+    })
 })
