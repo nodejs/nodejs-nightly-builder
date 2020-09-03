@@ -6,7 +6,8 @@
   "author": "Rod Vagg <rod@vagg.org>",
   "license": "MIT",
   "scripts": {
-    "test": "node ./test.js"
+    "lint": "standard",
+    "test": "npm run lint && node ./test.js"
   },
   "repository": {
     "type": "git",
