@@ -1,6 +1,6 @@
 {
   "name": "nodejs-nightly-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An application to trigger nightly builds of Node.js for distribution at nodejs.org _if_ there is new code available on a given branch",
   "main": "nightly-builder.js",
   "author": "Rod Vagg <rod@vagg.org>",
